@@ -18,7 +18,17 @@ connectCloudinary();
 
 // INFO: Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://trendify-frontend-sage.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:5174'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'token']
+}));
+app.options('*', cors());
 
 // INFO: API endpoints
 app.use("/api/user", userRouter);
