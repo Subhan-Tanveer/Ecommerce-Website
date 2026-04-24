@@ -12,23 +12,24 @@ import { seedAdmin } from "./controllers/userController.js";
 
 // INFO: Create express app mern stack
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 connectDB().then(() => seedAdmin());
 connectCloudinary();
 
 // INFO: Middleware
 app.use(express.json());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://trendify-frontend-sage.vercel.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, token');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  next();
+});
 app.use(cors({
-  origin: [
-    'https://trendify-frontend-sage.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:5174'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'token']
+  origin: 'https://trendify-frontend-sage.vercel.app',
+  credentials: true
 }));
-app.options('*', cors());
 
 // INFO: API endpoints
 app.use("/api/user", userRouter);
