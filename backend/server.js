@@ -19,17 +19,15 @@ connectCloudinary();
 // INFO: Middleware
 app.use(express.json());
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://trendify-frontend-sage.vercel.app');
+  const origin = req.headers.origin;
+  if (origin) res.header('Access-Control-Allow-Origin', origin);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, token');
   res.header('Access-Control-Allow-Credentials', 'true');
   if (req.method === 'OPTIONS') return res.sendStatus(200);
   next();
 });
-app.use(cors({
-  origin: 'https://trendify-frontend-sage.vercel.app',
-  credentials: true
-}));
+app.use(cors({ origin: true, credentials: true }));
 
 // INFO: API endpoints
 app.use("/api/user", userRouter);
